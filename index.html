@@ -33,12 +33,24 @@
                     zoom: 13
                 });
 
-                var basemapToggle = new BasemapToggle({
+                // var basemapToggle = new BasemapToggle({
+                //     view: view,
+                //     nextBasemap: "satellite"
+                // });
+
+                // view.ui.add(basemapToggle, "bottom-right");
+
+                var basemapGallery = new BasemapGallery({
                     view: view,
-                    nextBasemap: "satellite"
+                    source: {
+                        portal: {
+                            url: "https://www.arcgis.com",
+                            useVectorBasemaps: true  // Load vector tile basemaps
+                        }
+                    }
                 });
 
-                view.ui.add(basemapToggle, "bottom-right");
+                view.ui.add(basemapGallery, "top-right");
         });
     </script>
   </head>
