@@ -22,7 +22,7 @@
             ], function(Map, MapView, FeatureLayer) {
 
                 var map = new Map({
-                    basemap: "satellite"
+                    basemap: "hybrid"
                 });
 
                 var view = new MapView({
@@ -104,6 +104,60 @@
                 });
 
                 map.add(trails, 0);
+
+                var bikeTrailsRenderer = {
+                    type: "simple",
+                    symbol: {
+                    type: "simple-line",
+                    style: "short-dot",
+                    color: "#FF91FF",
+                    width: "1px"
+                    }
+                };
+
+                var bikeTrails = new FeatureLayer({
+                    url:
+                    "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+                    renderer: bikeTrailsRenderer,
+                    definitionExpression: "USE_BIKE = 'YES'"
+                });
+
+                map.add(bikeTrails, 1);
+
+                function createFillSymbol(value, color) {
+                    return {
+                        value: value,
+                        symbol: {
+                            color: color,
+                            type: "simple-fill",
+                            style: "solid",
+                            outline: {
+                                style: "none"
+                            }
+                        },
+                        label: value
+                    };
+                }
+
+                var openSpacesRenderer = {
+                    type: "unique-value",
+                    field: "TYPE",
+                    uniqueValueInfos: [
+                        createFillSymbol("Natural Areas", "#9E559C"),
+                        createFillSymbol("Regional Open Space", "#A7C636"),
+                        createFillSymbol("Local Park", "#149ECE"),
+                        createFillSymbol("Regional Recreation Park", "#ED5151")
+                    ]
+                };
+
+                var openspaces = new FeatureLayer({
+                    url:
+                    "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
+                    renderer: openSpacesRenderer,
+                    opacity: 0.20
+                });
+
+                map.add(openspaces, 0);
         });
     </script>
   </head>
