@@ -85,14 +85,18 @@
                     });
                 }
 
+                var sql = "TRL_NAME like '%Canyon%'";
+
                 view.when(function(){
                     // queryFeatureLayer(view.center, 1500, "intersects");
-                    queryFeatureLayerView(view.center, 1500, "intersects");
+                    // queryFeatureLayerView(view.center, 1500, "intersects");
+                    queryFeatureLayerView(view.center, 1500, "intersects", sql);
                 });
 
                 view.on("click", function(event){
                     // queryFeatureLayer(event.mapPoint, 1500, "intersects");
-                    queryFeatureLayerView(event.mapPoint, 1500, "intersects");
+                    // queryFeatureLayerView(event.mapPoint, 1500, "intersects");
+                    queryFeatureLayerView(event.mapPoint, 1500, "intersects", sql);
                 });
 
                 function queryFeatureLayerView(point, distance, spatialRelationship, sqlExpression) {
