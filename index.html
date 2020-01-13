@@ -106,18 +106,24 @@
                     // "content": function(){
                     //     return "This is {TRL_NAME} with {ELEV_GAIN} ft of climbing.";
                     // }
-                    content: [{
-                        type: "media",
-                            mediaInfos: [{
-                            type: "column-chart",
-                            caption: "",
-                            value: {
-                                fields: [ "ELEV_MIN","ELEV_MAX" ],
-                                normalizeField: null,
-                                tooltipField: "Min and max elevation values"
-                            }
-                            }]
-                        }]
+                    // content: [{
+                    //     type: "media",
+                    //         mediaInfos: [{
+                    //         type: "column-chart",
+                    //         caption: "",
+                    //         value: {
+                    //             fields: [ "ELEV_MIN","ELEV_MAX" ],
+                    //             normalizeField: null,
+                    //             tooltipField: "Min and max elevation values"
+                    //         }
+                    //         }]
+                    //     }]
+                    expressionInfos: [{
+                        name: "elevation-ratio",
+                        title: "Elevation change",
+                        expression: "Round((($feature.ELEV_MAX - $feature.ELEV_MIN)/($feature.LENGTH_MI)/5280)*100,2)"
+                    }],
+                    content: "The {TRL_NAME} trail average slope per mile is: {expression/elevation-ratio}% over a total of {LENGTH_MI} miles."
                 }
 
                 var trails = new FeatureLayer({
