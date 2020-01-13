@@ -15,10 +15,15 @@
     <link rel="stylesheet" href="https://js.arcgis.com/4.13/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.13/"></script>
     <script>
+            //execute server-side and client-side queries to find trailheads that are within a 
+            //distance of 1500 meters from the center of the map and where you click
             require([
             "esri/Map",
-            "esri/views/MapView"
-            ], function(Map, MapView) {
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/layers/GraphicsLayer",
+            "esri/Graphic"
+            ], function(Map, MapView, FeatureLayer, GraphicsLayer, Graphic) {
 
                 var map = new Map({
                     basemap: "topo-vector"
@@ -29,6 +34,63 @@
                     map: map,
                     center: [-118.80500, 34.02700], // longitude, latitude
                     zoom: 13
+                });
+
+                // Reference the feature layer to query
+                var featureLayer = new FeatureLayer({
+                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads_Styled/FeatureServer/0",
+                });
+
+                // Layer used to draw graphics returned
+                var graphicsLayer = new GraphicsLayer();
+                map.add(graphicsLayer);
+
+                //accepts return values from a query and add the results to the graphics layer
+                function addGraphics(result) {
+                    //clear the graphics layer each time with removeAll
+                    graphicsLayer.removeAll();
+                    result.features.forEach(function(feature){
+                    var g = new Graphic({
+                        geometry: feature.geometry,
+                        attributes: feature.attributes,
+                        symbol: {
+                        type: "simple-marker",
+                        color: [0,0,0],
+                        outline: {
+                            width: 2,
+                            color: [0,255,255],
+                        },
+                        size: "20px"
+                        },
+                        popupTemplate: {
+                            title: "{TRL_NAME}",
+                            content: "This a {PARK_NAME} trail located in {CITY_JUR}."
+                        }
+                    });
+                    graphicsLayer.add(g);
+                    });
+                }
+
+                function queryFeatureLayer(point, distance, spatialRelationship, sqlExpression) {
+                    var query = {
+                        geometry: point,
+                        distance: distance,
+                        spatialRelationship: spatialRelationship,
+                        outFields: ["*"],
+                        returnGeometry: true,
+                        where: sqlExpression
+                    };
+                    featureLayer.queryFeatures(query).then(function(result) {
+                        addGraphics(result, true);
+                    });
+                }
+
+                view.when(function(){
+                    queryFeatureLayer(view.center, 1500, "intersects");
+                });
+
+                view.on("click", function(event){
+                    queryFeatureLayer(event.mapPoint, 1500, "intersects");
                 });
         });
     </script>
