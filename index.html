@@ -41,7 +41,21 @@
 
                       // Trails feature layer (lines)
                 var trailsLayer = new FeatureLayer({
-                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0"
+                    url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+                    definitionExpression: "ELEV_GAIN < 250",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "simple-line",
+                            color: "green",
+                            width: "2px"
+                        }
+                    },
+                    outFields: ["TRL_NAME","ELEV_GAIN"],
+                    popupTemplate: {  // Enable a popup
+                        title: "{TRL_NAME}", // Show attribute value
+                        content: "The trail elevation gain is {ELEV_GAIN} ft."  // Display text in pop-up
+                    }
                 });
 
                 map.add(trailsLayer, 0);
