@@ -16,20 +16,33 @@
     <script src="https://js.arcgis.com/4.13/"></script>
     <script>
             require([
-            "esri/Map",
-            "esri/views/MapView"
-            ], function(Map, MapView) {
+            "esri/WebMap",
+            "esri/views/MapView",
+            "esri/widgets/Legend",
+            "esri/widgets/ScaleBar"
+            ], function(WebMap, MapView, Legend, ScaleBar) {
 
-                var map = new Map({
-                    basemap: "topo-vector"
+                var webmap = new WebMap({
+                    portalItem: {
+                      id: "41281c51f9de45edaf1c8ed44bb10e30"
+                    }
                 });
 
                 var view = new MapView({
                     container: "viewDiv",
-                    map: map,
-                    center: [-118.80500, 34.02700], // longitude, latitude
-                    zoom: 13
+                    map: webmap,
                 });
+
+                var legend = new Legend({
+                  view: view,
+                  layerInfos: []
+                });
+                view.ui.add(legend, "top-right");
+
+                var scalebar = new ScaleBar({
+                  view: view
+                });
+                view.ui.add(scalebar, "bottom-left");
         });
     </script>
   </head>
