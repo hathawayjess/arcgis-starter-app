@@ -17,11 +17,17 @@
     <script>
             require([
             "esri/Map",
-            "esri/views/MapView"
-            ], function(Map, MapView) {
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/widgets/Editor"
+            ], function(Map, MapView, FeatureLayer, Editor) {
+                var myPointsFeatureLayer = new FeatureLayer({
+                  url: "https://services8.arcgis.com/KsXZDThvSinzJ3pq/arcgis/rest/services/my_points/FeatureServer/0?token=8N1Zaa2EPSeVkcVdJO_vKcfb338ylkNHs6dsojsVUddAF8YYNyx8g2b8MIIWYlWjJRGxcjkCz44Z4XVAzEoyrWx-myAtt-oqkF6UR9_vJ8VsLN0NIGzE3WCNrLzW0EU005NsF4R78AjSieeLzOlmB3gHBUQnRohkislBiwuwfVYSk_c5o744yIHrR3OyuMdpWc8VPXHjBQ-XFMmnsLFw3hsy2_f3G-ejxVoaO4LifuOQLHu0rn6FQDid2uS-JbjK0CJls91xjanR5WaNHJ_loQ.."
+                });
 
                 var map = new Map({
-                    basemap: "topo-vector"
+                    basemap: "topo-vector",
+                    layers: [myPointsFeatureLayer]
                 });
 
                 var view = new MapView({
@@ -30,6 +36,12 @@
                     center: [-118.80500, 34.02700], // longitude, latitude
                     zoom: 13
                 });
+
+                var editorWidget = new Editor({
+                  view: view
+                });
+
+                view.ui.add(editorWidget, "top-right");
         });
     </script>
   </head>
